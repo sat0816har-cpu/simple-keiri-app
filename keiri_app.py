@@ -236,6 +236,18 @@ elif menu == "仕訳一覧":
         st.write(f"借方合計：{display_df['借方金額'].sum():,.0f} 円")
         st.write(f"貸方合計：{display_df['貸方金額'].sum():,.0f} 円")
 
+        # ---- 仕訳一覧をCSVファイルとしてダウンロードできるようにする ----
+        # DataFrame をCSV形式の文字列（バイト列）に変換する
+        # encoding="utf-8-sig" にすると、Excelで開いたときに文字化けしにくい
+        csv_data = display_df.to_csv(index=False).encode("utf-8-sig")
+
+        st.download_button(
+            label="⬇️ 仕訳一覧をCSVでダウンロード",
+            data=csv_data,
+            file_name=f"仕訳一覧_{date.today()}.csv",
+            mime="text/csv",
+        )
+
         # 特定の行を削除できるようにする（間違えて入力した場合の修正用）
         st.subheader("仕訳の削除")
         row_to_delete = st.number_input(
